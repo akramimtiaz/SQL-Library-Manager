@@ -14,7 +14,7 @@ router.get('/new', (req, res) => {
 //CREATE →	
 router.post('/new', (req, res) => {
     Book.create(req.body)
-    .then(() => res.redirect(`/books/`))
+    .then(() => res.redirect('/books/'))
 })
 
 //READ 
@@ -29,8 +29,7 @@ router.post('/:id', (req, res) => {
     const id = req.params.id
     Book.findByPk(id)
     .then(book => book.update(req.body))
-    .then(book => res.redirect(`/books/${book.id}`))
-
+    .then(() => res.redirect('/books/'))
 })
 
 //DELETE
