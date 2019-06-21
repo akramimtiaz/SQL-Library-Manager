@@ -2,11 +2,11 @@ extends ../layout
 
 block content
     h1= title
-    form(action='/books/' + book.id + '?_method=PUT', method='post')
+    form(action='/books/' + book.id, method='post')
         include includes/form
         p   
             input(type='submit' value='Update')
-    form(action='/books/' + book.id + '?_method=DELETE' method='post')
+    form(action='/books/' + book.id + '/delete', method='post')
         p
             a(class='button' href='/books/') Cancel
         p   
