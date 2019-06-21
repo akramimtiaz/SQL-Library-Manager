@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+    h1= title
+    form(action='/books' method='post')
+        include includes/form
+        p
+            input(type='submit' value='Add') 
+        p
+            a(class='button' href='/books/') Cancel
