@@ -1,65 +1,44 @@
 const express = require('express')
 const router = express.Router()
-
-const books = [
-    {
-        id: 1,
-        title: 'Book 1',
-        author: 'author 1',
-        genre: 'crime',
-        year: 2000 
-    },
-    {
-        id: 2,
-        title: 'Book 2',
-        author: 'author 2',
-        genre: 'fiction',
-        year: 2005
-    },
-    {
-        id: 3,
-        title: 'Book 3',
-        author: 'author 3',
-        genre: 'non-fiction',
-        year: 2010
-    },
-    {
-        id: 4,
-        title: 'Book 4',
-        author: 'author 4',
-        genre: 'action',
-        year: 2015
-    }
-]
+const Book = require('../models').Book
 
 router.get('/', (req,res) => {
-    res.render('books/index', { books })
+    Book.findAll()
+    .then((books) => res.render('books/index', { books, title: 'Book Library' }))
 })
 
 router.get('/new', (req, res) => {
-
+    res.render('books/new-book', { book: {}, title: 'New Book' })
 })
 
 //CREATE →	
 router.post('/new', (req, res) => {
-
+    Book.create(req.body)
+    .then(() => res.redirect(`/books/`))
 })
 
 //READ 
 router.get('/:id', (req, res) => {
-    
+    const id = req.params.id
+    Book.findByPk(id)
+    .then(book => res.render('books/update-book', { book, title: 'Update Book' }))
 })
 
 //UPDATE
 router.post('/:id', (req, res) => {
+    const id = req.params.id
+    Book.findByPk(id)
+    .then(book => book.update(req.body))
+    .then(book => res.redirect(`/books/${book.id}`))
 
 })
 
 //DELETE
 router.post('/:id/delete', (req, res) => {
-
+    const id = req.params.id
+    Book.findByPk(id)
+    .then(book => book.destroy())
+    .then(() => res.redirect('/books/'))
 })
-
-
 
 module.exports = router
