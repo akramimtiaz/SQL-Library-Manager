@@ -1,14 +1,31 @@
 const express = require('express')
 const router = express.Router()
+
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
+
 const Book = require('../models').Book
+const determineQueryType = require('./misc/determineQueryType')
 
 router.get('/', (req,res) => {
     Book.findAll()
-    .then((books) => res.render('books/index', { books, title: 'Book Library' }))
+    .then((books) => res.render('books/index', { books, title: 'Book Library', search: {} }))
 })
 
 router.get('/new', (req, res) => {
     res.render('books/new-book', { book: {}, title: 'New Book' })
+})
+
+router.post('/search', (req, res) => {
+    const search = req.body
+    const where = determineQueryType(search.query, search.field)
+
+    search.occurred = true
+
+    Book.findAll({where})
+    .then(books => {
+        res.render('books/index', { books, title: 'Search Results', search })
+    })
 })
 
 //CREATE →	

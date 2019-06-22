@@ -2,19 +2,16 @@ extends ../layout
 
 block content
   h1= title
+  include includes/search
   p 
     a(class='button', href='/books/new') Create New Book
-  table
-    thead
-      tr
-        - const columns = ['Title', 'Author', 'Genre', 'Year']
-        each col in columns
-          th= col
-    tbody
-      each book in books
-        tr
-          td
-            a(href='/books/'+book.id)= book.title
-          td= book.author
-          td= book.genre
-          td= book.year
+  if books.length > 0
+    include includes/table
+  else if search.occurred
+    p There are no books matching your search query
+  else
+    p There are currently no books in the database
+    
+  if search.occurred
+    p
+      a(class='button' href='/books/') ← Return

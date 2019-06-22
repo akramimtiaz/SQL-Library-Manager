@@ -95,3 +95,13 @@ input[type=text] {
 .error {
   color: rgb(236, 15, 15);
 }
+
+/*Added Styles*/
+select {
+  font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  border-radius: 2px;
+  border-color: #E7E7E7;
+  width: 300px;
+  padding: 10px; 
+}

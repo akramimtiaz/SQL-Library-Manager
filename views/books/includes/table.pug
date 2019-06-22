@@ -1,0 +1,14 @@
+table
+    thead
+      tr
+        - const columns = ['Title', 'Author', 'Genre', 'Year']
+        each col in columns
+          th= col
+    tbody
+      each book in books
+        tr
+          td
+            a(href='/books/'+book.id)= book.title
+          td= book.author
+          td= book.genre
+          td= book.year
