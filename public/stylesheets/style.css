@@ -105,3 +105,21 @@ select {
   width: 300px;
   padding: 10px; 
 }
+
+.pagination ul{
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+}
+
+.pagination a {
+  padding: 10px;
+  font-size: 1.25em;
+  text-align: center;
+  border: 1px solid #E7E7E7;
+}
+
+.pagination a.active {
+  background: #01b189;
+  color: white;
+}
