@@ -2,6 +2,8 @@ extends ../layout
 
 block content
     h1= title
+    if errors
+        include includes/form-error
     form(action='/books/new' method='post')
         include includes/form
         p

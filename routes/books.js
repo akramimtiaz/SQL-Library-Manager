@@ -6,6 +6,7 @@ const Op = Sequelize.Op
 
 const Book = require('../models').Book
 const determineQueryType = require('./misc/determineQueryType')
+const determineValidationError = require('./misc/determineValidationError')
 
 router.get('/', (req,res) => {
     Book.findAll()
@@ -37,6 +38,14 @@ router.post('/search', (req, res) => {
 router.post('/new', (req, res) => {
     Book.create(req.body)
     .then(() => res.redirect('/books/'))
+    .catch(error => {
+        if(error.name === 'SequelizeValidationError'){
+            const err = determineValidationError(error)
+            res.render('books/new-book', { book: Book.build(req.body), errors: err, title: 'New Book'})
+        } else {
+            throw error
+        }
+    })
     .catch(error => res.send(500, error))
 })
 
