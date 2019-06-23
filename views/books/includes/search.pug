@@ -2,7 +2,6 @@ form(action='/books/search' method='post')
     p
         label(for='query') Query
         input(name='query' type='text' id='query' value=search.query)
-        label(for='field') Field
         - const fields = ['title', 'author', 'genre', 'year']
         select(name='field' id='field')
             each field in fields
