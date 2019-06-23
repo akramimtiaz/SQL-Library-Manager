@@ -9,7 +9,9 @@ const determineQueryType = require('./misc/determineQueryType')
 
 router.get('/', (req,res) => {
     Book.findAll()
-    .then((books) => res.render('books/index', { books, title: 'Book Library', search: {} }))
+    .then((books) => {
+        res.render('books/index', { books, title: 'Library', search: {} })
+    })
     .catch(error => res.send(500, error))
 })
 
@@ -28,12 +30,14 @@ router.post('/search', (req, res) => {
     .then(books => {
         res.render('books/index', { books, title: 'Search Results', search })
     })
+    .catch(error => res.send(500, error))
 })
 
 //CREATE →	
 router.post('/new', (req, res) => {
     Book.create(req.body)
     .then(() => res.redirect('/books/'))
+    .catch(error => res.send(500, error))
 })
 
 //READ 
