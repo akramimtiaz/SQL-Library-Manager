@@ -13,7 +13,7 @@ router.get('/', (req,res) => {
     .then((books) => {
         res.render('books/index', { books, title: 'Library', search: {} })
     })
-    .catch(error => res.send(500, error))
+    .catch(error => res.status(500).send(error))
 })
 
 router.get('/new', (req, res) => {
@@ -28,10 +28,8 @@ router.post('/search', (req, res) => {
     search.occurred = true
 
     Book.findAll({where})
-    .then(books => {
-        res.render('books/index', { books, title: 'Search Results', search })
-    })
-    .catch(error => res.send(500, error))
+    .then(books => res.render('books/index', { books, title: 'Search Results', search }))
+    .catch(error => res.status(500).send(error))
 })
 
 //CREATE →	
@@ -46,33 +44,61 @@ router.post('/new', (req, res) => {
             throw error
         }
     })
-    .catch(error => res.send(500, error))
+    .catch(error => res.status(500).send(error))
 })
 
 //READ 
 router.get('/:id', (req, res) => {
     const id = req.params.id
     Book.findByPk(id)
-    .then(book => res.render('books/update-book', { book, title: 'Update Book' }))
-    .catch(error => res.send(500, error))
+    .then(book => {
+        if(book){
+            res.render('books/update-book', { book, title: 'Update Book' })
+        }else {
+            res.render('books/error')
+        }
+    })
+    .catch(error => res.status(500).send(error))
 })
 
 //UPDATE
 router.post('/:id', (req, res) => {
     const id = req.params.id
     Book.findByPk(id)
-    .then(book => book.update(req.body))
+    .then(book => {
+        if(book) {
+            return book.update(req.body)
+        }else{
+            res.status(404).send({error: 'Not Found'})
+        }
+    })
     .then(() => res.redirect('/books/'))
-    .catch(error => res.send(500, error))
+    .catch(error => {
+        if(error.name === 'SequelizeValidationError'){
+            const err = determineValidationError(error)
+            const book = Book.build(req.body)
+            book.id = id
+            res.render('books/update-book', {book, errors: err, title: 'Update Book'})
+        } else {
+            throw error
+        }
+    })
+    .catch(error => res.status(500).send(error))
 })
 
 //DELETE
 router.post('/:id/delete', (req, res) => {
     const id = req.params.id
     Book.findByPk(id)
-    .then(book => book.destroy())
+    .then(book => {
+        if(book){
+            return book.destroy()
+        } else {
+            res.status(404).send({error: 'Not Found'})
+        }
+    })
     .then(() => res.redirect('/books/'))
-    .catch(error => res.send(500, error))
+    .catch(error => res.status(500).send(error))
 })
 
 module.exports = router
