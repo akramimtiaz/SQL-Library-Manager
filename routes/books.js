@@ -8,6 +8,7 @@ const Book = require('../models').Book
 const determineQueryType = require('./misc/determineQueryType')
 const determineValidationError = require('./misc/determineValidationError')
 
+//GET books listing
 router.get('/', (req,res) => {
     Book.findAll()
     .then((books) => {
@@ -16,11 +17,12 @@ router.get('/', (req,res) => {
     .catch(error => res.status(500).send(error))
 })
 
+//Create a new book form
 router.get('/new', (req, res) => {
     res.render('books/new-book', { book: {}, title: 'New Book' })
 })
 
-//SEARCH
+//SEARCH for a book
 router.post('/search', (req, res) => {
     const search = req.body
     const where = determineQueryType(search.query, search.field)
@@ -32,7 +34,7 @@ router.post('/search', (req, res) => {
     .catch(error => res.status(500).send(error))
 })
 
-//CREATE →	
+//POST create a new book
 router.post('/new', (req, res) => {
     Book.create(req.body)
     .then(() => res.redirect('/books/'))
@@ -47,7 +49,7 @@ router.post('/new', (req, res) => {
     .catch(error => res.status(500).send(error))
 })
 
-//READ 
+//GET an individual book
 router.get('/:id', (req, res) => {
     const id = req.params.id
     Book.findByPk(id)
@@ -55,13 +57,13 @@ router.get('/:id', (req, res) => {
         if(book){
             res.render('books/update-book', { book, title: 'Update Book' })
         }else {
-            res.render('books/error')
+            res.status(404).render('books/error')
         }
     })
     .catch(error => res.status(500).send(error))
 })
 
-//UPDATE
+//UPDATE an individual book
 router.post('/:id', (req, res) => {
     const id = req.params.id
     Book.findByPk(id)
@@ -86,7 +88,7 @@ router.post('/:id', (req, res) => {
     .catch(error => res.status(500).send(error))
 })
 
-//DELETE
+//DELETE an individual book
 router.post('/:id/delete', (req, res) => {
     const id = req.params.id
     Book.findByPk(id)
